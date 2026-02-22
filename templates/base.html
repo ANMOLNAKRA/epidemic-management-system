@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EpiShield{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- Custom CSS (if any) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0f2f5, #d4edda);
+            font-family: 'Bradley Hand ITC', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        /* Navbar Styling */
+        .navbar-custom {
+            background: linear-gradient(to right, #28a745, #218838);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px 0;
+	    position: sticky;
+        }
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #d4edda !important;
+            transform: scale(1.05);
+        }
+        .navbar-custom .dropdown-menu {
+            background-color: #28a745;
+            border: none;
+        }
+        .navbar-custom .dropdown-item {
+            color: white;
+        }
+        .navbar-custom .dropdown-item:hover {
+            background-color: #218838;
+            color: #d4edda;
+        }
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            width: 100vw; /* Full viewport width */
+            height: 80vh; /* 80% of viewport height for a larger presence */
+        }
+        .hero-section img {
+            width: 100%;
+            height: 100%; /* Fill the entire hero section */
+            object-fit: cover; /* Fill the container, may crop edges */
+            object-position: top; /* Focus on the upper part */
+            filter: brightness(70%);
+        }
+        .hero-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .hero-text h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .hero-text p {
+            font-size: 1.2rem;
+            animation: fadeIn 3s ease-in-out;
+        }
+        /* Marquee */
+        .marquee-section {
+            background-color: #55ed6a;
+            color: white;
+            padding: 10px 0;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        /* Content Container */
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            flex: 1;
+        }
+        /* Promotions Section */
+        .promotions-section {
+            background: linear-gradient(to right, #28a745, #34c759);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .promotions-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .promotions-section p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        .promotions-section .btn {
+            background-color: #ffffff;
+            color: #28a745;
+            font-weight: bold;
+            padding: 10px 30px;
+            transition: transform 0.3s ease;
+        }
+        .promotions-section .btn:hover {
+            transform: scale(1.1);
+            background-color: #f8f9fa;
+        }
+        /* About Us Section */
+        .about-section {
+            background-color: #f8f9fa;
+            padding: 40px 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        .about-section h2 {
+            font-size: 2.5rem;
+            color: #28a745;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .about-section .team-img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain; /* Show full image */
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        /* Carousel Section */
+        .carousel-section {
+            margin: 30px 0;
+	    margin-left: 70px;  
+        }
+        .carousel-item img {
+             position: relative;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            width: 100vw; /* Full viewport width */
+            height: 80vh; /* 80% of viewport height for a larger presence */
+        }
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        /* Footer */
+        .footer {
+            background: linear-gradient(to right, #28a745, #218838);
+            color: black;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer a {
+            color: #171614;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: white;
+        }
+        .footer .social-icons {
+            display: flex;
+            justify-content: flex-end; /* Align social icons to the right */
+        }
+        .footer .social-icons i {
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: transform 0.3s ease;
+        }
+        .footer .social-icons i:hover {
+            transform: scale(1.2);
+        }
+        .footer .quick-links {
+            text-align: left; /* Align quick links to the left */
+        }
+        /* Customer Care Widget */
+        .customer-care-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000; /* Ensure it stays above other elements */
+        }
+        .chat-bubble {
+            background: linear-gradient(135deg, #6f42c1, #8a54e9); /* Purple gradient */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            position: absolute;
+            right: 70px; /* Position to the left of the agent photo */
+            bottom: 50px; /* Align with the top of the agent photo */
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none; /* Hidden by default */
+            width : 200px;
+        }
+        .chat-bubble span {
+            display: flex;
+        }
+        .chat-bubble span::before {
+            margin-right: 5px;
+        }
+        .agent-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #6f42c1; /* Purple border */
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .agent-photo:hover {
+            transform: scale(1.1);
+        }
+        .customer-care-widget:hover .chat-bubble {
+            display: block; /* Show chat bubble on hover */
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+   <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background: linear-gradient(to right, #28a745, #218838);">
+    <div class="container-fluid">
+        <!-- EpiShield Logo (Left Side) -->
+       <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-shield-virus me-2"></i>EpiShield
+            </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Left Side: Navigation Links and Dropdowns -->
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                </li>
+                <!-- Patients Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="patientsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Patients
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="patientsDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('add_patient') }}">Add Patient</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('view_patients') }}">View Patients</a></li>
+                    </ul>
+                </li>
+                <!-- Resources Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Resources
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('add_resource') }}">Add Resource</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('view_resources') }}">Resources</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('resource_allocation') }}">Resource Allocation</a></li>
+                    </ul>
+                </li>
+                <!-- Outbreaks Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="outbreaksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Outbreaks
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="outbreaksDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('add_outbreak') }}">Add Outbreak</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('view_outbreaks') }}">Outbreaks</a></li>
+                    </ul>
+                </li>
+                <!-- Diseases Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="diseasesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Diseases
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="diseasesDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('report_disease') }}">Report New Disease</a></li>
+                    </ul>
+                </li>
+                <!-- Analysis Link (New) -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('analysis') }}">Analysis</a>
+                </li>
+            </ul>
+            <!-- Right Side: Welcome Message and Buttons -->
+            <div class="d-flex align-items-center">
+                {% if session.username %}
+                    <!-- Show Welcome message and Logout button if logged in -->
+                    <span class="navbar-text text-white me-3">
+                        Welcome, {{ session.username }}
+                    </span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+                {% else %}
+                    <!-- Show Login and Register buttons if not logged in -->
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm me-2">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-sm">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <img src="{{ url_for('static', filename='images/epidemic-hero.jpg') }}" alt="Hero Banner">
+        <div class="hero-text">
+            <h1>EpiShield</h1>
+            <p>Your Trusted Partner in Crisis Management</p>
+        </div>
+    </div>
+
+    <!-- Marquee Section -->
+    <div class="marquee-section">
+        <marquee behavior="scroll" direction="left">
+            🚨 Latest Update: New features added for quick analysis! | 🎉 Join our community to stay informed! | 📞 Contact us at support@epishield.com
+        </marquee>
+    </div>
+
+    <!-- Flash Messages -->
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show fade-in" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Content Block -->
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Promotions Section -->
+    <div class="promotions-section fade-in">
+        <h2>Why Choose Epidemic Management System?</h2>
+        <p>Our system is the leading solution for managing epidemics with real-time tracking, resource allocation, and patient care. Trusted by healthcare professionals worldwide, we provide:</p>
+        <ul class="list-unstyled">
+            <li><i class="fas fa-check-circle me-2"></i>Seamless outbreak monitoring</li>
+            <li><i class="fas fa-check-circle me-2"></i>Efficient resource management</li>
+            <li><i class="fas fa-check-circle me-2"></i>Secure patient data handling</li>
+            <li><i class="fas fa-check-circle me-2"></i>24/7 support from our expert team</li>
+        </ul>
+        <a href="{{ url_for('index') }}" class="btn">Learn More</a>
+    </div>
+
+    <!-- About Us Section -->
+    <div class="about-section fade-in">
+        <h2>About Us</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename='images/team-photo.jpg') }}" alt="Our Team" class="team-img">
+            </div>
+            <div class="col-md-6">
+                <p>We are a dedicated team of healthcare professionals, data scientists, and software engineers committed to revolutionizing epidemic management. Founded in 2025, our mission is to empower governments and healthcare organizations with tools to respond swiftly and effectively to outbreaks.</p>
+                <p>Our system has been recognized by the Global Health Organization for its impact in reducing response times by 40%. Join us in our journey to make the world a safer place!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carousel Section -->
+    <div class="carousel-section container fade-in">
+        <div id="featureCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#featureCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#featureCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#featureCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{{ url_for('static', filename='images/feature1.jpg') }}" class="d-block w-100" alt="Feature 1">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Real-Time Outbreak Tracking</h5>
+                        <p>Monitor outbreaks with live data updates.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='images/feature2.jpg') }}" class="d-block w-100" alt="Feature 2">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Efficient Resource Allocation</h5>
+                        <p>Distribute resources where they’re needed most.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='images/feature3.jpg') }}" class="d-block w-100" alt="Feature 3">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Secure Patient Management</h5>
+                        <p>Protect patient data with top-tier security.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#featureCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#featureCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 quick-links">
+                    <h5>Quick Links</h5>
+                    <p>
+                        <a href="{{ url_for('view_resources') }}">Resources</a> |
+                        <a href="{{ url_for('view_outbreaks') }}">Outbreaks</a> |
+                        <a href="{{ url_for('view_patients') }}">Patients</a>
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h5>Contact Us</h5>
+                    <p><i class="fas fa-envelope me-2"></i>support@epishield.com</p>
+                    <p><i class="fas fa-phone me-2"></i>+91 2255 369</p>
+                </div>
+                <div class="col-md-4">	
+                    <h5>Follow Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <p>© 2025 EpiShield. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Customer Care Widget -->
+    <div class="customer-care-widget">
+        <div class="chat-bubble">
+            <span>👋 Hi there! Got any questions? I can help you.</span>
+        </div>
+        <img src="{{ url_for('static', filename='images/customer-care-agent.jpg') }}" alt="Customer Care Agent" class="agent-photo">
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

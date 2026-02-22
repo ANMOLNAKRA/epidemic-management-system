@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Patient - EpiShield{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center text-success mb-4">Add New Patient</h2>
+
+        <!-- Add Patient Form -->
+        <div class="card shadow-sm p-4">
+            <h4 class="card-title text-center">Patient Information</h4>
+            <form method="POST" action="{{ url_for('add_patient') }}">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="age" class="form-label">Age</label>
+                    <input type="number" class="form-control" id="age" name="age" min="0" max="150" required>
+                </div>
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select class="form-select" id="gender" name="gender" required>
+                        <option value="" disabled selected>Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="disease_id" class="form-label">Disease</label>
+                    <select class="form-select" id="disease_id" name="disease_id" required>
+                        <option value="" disabled selected>Select a disease</option>
+                        {% for disease in diseases %}
+                            <option value="{{ disease[0] }}">{{ disease[1] }} (ID: {{ disease[0] }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="" disabled selected>Select status</option>
+                        <option value="Infected">Infected</option>
+                        <option value="Recovered">Recovered</option>
+                        <option value="Deceased">Deceased</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Add Patient</button>
+                    <a href="{{ url_for('view_patients') }}" class="btn btn-secondary ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

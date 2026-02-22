@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Resource Allocation - EpiShield{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center text-success mb-4">Resource Allocation</h2>
+
+        <!-- Resource Allocation Form -->
+        <div class="card shadow-sm p-4 mb-4">
+            <h4 class="card-title text-center">Allocate Resources to Outbreaks</h4>
+            <form method="POST" action="{{ url_for('resource_allocation') }}">
+                <div class="mb-3">
+                    <label for="resource_id" class="form-label">Select Resource</label>
+                    <select class="form-select" id="resource_id" name="resource_id" required>
+                        <option value="" disabled selected>Select a resource</option>
+                        {% for resource in resources %}
+                            <option value="{{ resource[0] }}">{{ resource[1] }} (ID: {{ resource[0] }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="outbreak_id" class="form-label">Select Outbreak</label>
+                    <select class="form-select" id="outbreak_id" name="outbreak_id" required>
+                        <option value="" disabled selected>Select an outbreak</option>
+                        {% for outbreak in outbreaks %}
+                            <option value="{{ outbreak[0] }}">{{ outbreak[1] }} (ID: {{ outbreak[0] }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="quantity_allocated" class="form-label">Quantity to Allocate</label>
+                    <input type="number" class="form-control" id="quantity_allocated" name="quantity_allocated" min="1" required>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Allocate Resource</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Existing Allocations Table -->
+        <div class="card shadow-sm p-4">
+            <h4 class="card-title text-center">Existing Resource Allocations</h4>
+            {% if allocations %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Resource ID</th>
+                                <th>Resource Type</th>
+                                <th>Outbreak ID</th>
+                                <th>Outbreak Location</th>
+                                <th>Quantity Allocated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for allocation in allocations %}
+                                <tr>
+                                    <td>{{ allocation.resource_id }}</td>
+                                    <td>{{ allocation.resource_type }}</td>
+                                    <td>{{ allocation.outbreak_id }}</td>
+                                    <td>{{ allocation.outbreak_location }}</td>
+                                    <td>{{ allocation.quantity_allocated }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center text-muted">No resource allocations found.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

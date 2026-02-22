@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}View Outbreaks - EpiShield{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center text-success mb-4">View Outbreaks</h2>
+
+        <!-- Search Bar -->
+        <div class="row mb-4">
+            <div class="col-md-6 offset-md-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search outbreaks by location..." onkeyup="searchOutbreaks()">
+            </div>
+        </div>
+
+        <!-- Outbreaks Table -->
+        <div class="card shadow-sm p-4">
+            <h4 class="card-title text-center">Outbreak List</h4>
+            {% if outbreaks %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="outbreaksTable">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Outbreak ID</th>
+                                <th>Disease</th>
+                                <th>Location</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Number of Cases</th>
+                                <th>Fatality Rate (%)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for outbreak in outbreaks %}
+                                <tr>
+                                    <td>{{ outbreak[0] }}</td>
+                                    <td>{{ outbreak[7] }}</td> <!-- Disease_Name -->
+                                    <td>{{ outbreak[2] }}</td>
+                                    <td>{{ outbreak[3] }}</td>
+                                    <td>
+                                        <!-- Form to update end date -->
+                                        <form method="POST" action="{{ url_for('view_outbreaks') }}" style="display: inline;">
+                                            <input type="hidden" name="outbreak_id" value="{{ outbreak[0] }}">
+                                            <input type="date" name="end_date" value="{{ outbreak[4] if outbreak[4] else '' }}" class="form-control form-control-sm d-inline-block w-auto">
+                                            <input type="hidden" name="update_end_date" value="1">
+                                            <button type="submit" class="btn btn-sm btn-primary ms-1">Update</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <!-- Form to update number of cases -->
+                                        <form method="POST" action="{{ url_for('view_outbreaks') }}" style="display: inline;">
+                                            <input type="hidden" name="outbreak_id" value="{{ outbreak[0] }}">
+                                            <input type="number" name="number_of_cases" value="{{ outbreak[5] }}" min="0" class="form-control form-control-sm d-inline-block w-auto" required>
+                                            <input type="hidden" name="update_number_of_cases" value="1">
+                                            <button type="submit" class="btn btn-sm btn-primary ms-1">Update</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <!-- Form to update fatality rate -->
+                                        <form method="POST" action="{{ url_for('view_outbreaks') }}" style="display: inline;">
+                                            <input type="hidden" name="outbreak_id" value="{{ outbreak[0] }}">
+                                            <input type="number" step="0.01" name="fatality_rate" value="{{ outbreak[6] }}" min="0" max="100" class="form-control form-control-sm d-inline-block w-auto" required>
+                                            <input type="hidden" name="update_fatality_rate" value="1">
+                                            <button type="submit" class="btn btn-sm btn-primary ms-1">Update</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <!-- Form to delete outbreak -->
+                                        <form method="POST" action="{{ url_for('view_outbreaks') }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this outbreak?');">
+                                            <input type="hidden" name="outbreak_id" value="{{ outbreak[0] }}">
+                                            <input type="hidden" name="delete_outbreak" value="1">
+                                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center text-muted">No outbreaks found.</p>
+            {% endif %}
+            <div class="text-center mt-3">
+                <a href="{{ url_for('add_outbreak') }}" class="btn btn-success">Add New Outbreak</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Search Functionality -->
+    <script>
+        function searchOutbreaks() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let table = document.getElementById('outbreaksTable');
+            let rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) { // Start at 1 to skip the header row
+                let location = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase(); // Location column
+                if (location.includes(input)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+{% endblock %}

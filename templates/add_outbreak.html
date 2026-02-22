@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Outbreak - EpiShield{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center text-success mb-4">Add New Outbreak</h2>
+
+        <!-- Add Outbreak Form -->
+        <div class="card shadow-sm p-4">
+            <h4 class="card-title text-center">Outbreak Information</h4>
+            <form method="POST" action="{{ url_for('add_outbreak') }}">
+                <div class="mb-3">
+                    <label for="disease_id" class="form-label">Disease</label>
+                    <select class="form-select" id="disease_id" name="disease_id" required>
+                        <option value="" disabled selected>Select a disease</option>
+                        {% for disease in diseases %}
+                            <option value="{{ disease[0] }}">{{ disease[1] }} (ID: {{ disease[0] }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" required placeholder="e.g., New York, USA">
+                </div>
+                <div class="mb-3">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                </div>
+                <div class="mb-3">
+                    <label for="end_date" class="form-label">End Date (Optional)</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date">
+                </div>
+                <div class="mb-3">
+                    <label for="number_of_cases" class="form-label">Number of Cases (Optional)</label>
+                    <input type="number" class="form-control" id="number_of_cases" name="number_of_cases" min="0" value="0" placeholder="Enter number of cases">
+                </div>
+                <div class="mb-3">
+                    <label for="fatality_rate" class="form-label">Fatality Rate (%) (Optional)</label>
+                    <input type="number" step="0.01" class="form-control" id="fatality_rate" name="fatality_rate" min="0" max="100" value="0.00" placeholder="Enter fatality rate (e.g., 2.50)">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Add Outbreak</button>
+                    <a href="{{ url_for('view_outbreaks') }}" class="btn btn-secondary ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
