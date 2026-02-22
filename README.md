@@ -16,7 +16,7 @@ This project demonstrates core concepts of:
 
 ---
 
-##  Features
+##  Features-->
 
 ###  Authentication & Security
 
