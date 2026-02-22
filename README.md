@@ -239,6 +239,6 @@ GitHub: https://github.com/your-username
 
 ---
 
-## ⭐ If you like this project
+##  If you like this project
 
 Give it a star on GitHub to support the work!
