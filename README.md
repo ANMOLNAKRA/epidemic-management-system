@@ -61,7 +61,7 @@ This project demonstrates core concepts of:
 
 * HTML5
 * CSS3
-* Bootstrap (if used)
+* Bootstrap 
 * Jinja2 Templates (Flask)
 
 ### Backend
