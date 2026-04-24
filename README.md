@@ -235,7 +235,7 @@ You are free to use, modify, and distribute this project with proper attribution
 
 **Anmol**
 B.Tech Student |
-GitHub: https://github.com/your-username
+GitHub: https://github.com/ANMOLNAKRA
 
 ---
 
