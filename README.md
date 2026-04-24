@@ -16,7 +16,7 @@ This project demonstrates core concepts of:
 
 ---
 
-##  Features-->
+##  Features
 
 ###  Authentication & Security
 
@@ -85,10 +85,10 @@ epidemic-management-system/
 ├── app.py                # Main Flask application
 ├── db_config.py          # MySQL database configuration
 ├── requirements.txt      # Python dependencies
-├── LICENSE               # Project license (MIT recommended)
+├── LICENSE               # Project license (MIT)
 ├── README.md             # Project documentation
 │
-├── templates/            # HTML Templates (Frontend)
+├── templates/            # HTML Templates 
 │   ├── base.html
 │   ├── index.html
 │   ├── login.html
@@ -98,10 +98,10 @@ epidemic-management-system/
 │   ├── analysis.html
 │   └── ...
 │
-├── static/               # CSS, JS, Images (if available)
+├── static/               # CSS, JS, Images 
 │
 └── database/
-    └── schema.sql        # (Optional) Database schema file
+    └── schema.sql        #Database schema file
 ```
 
 ---
@@ -111,16 +111,16 @@ epidemic-management-system/
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/ANMOLNAKRA/epidemic-management-system.git
+cd epidemic-management-system
 ```
 
-###  Create Virtual Environment (Recommended)
+###  Create Virtual Environment 
 
 ```bash
 python -m venv venv
-source venv/bin/activate   # On Linux/Mac
-venv\Scripts\activate      # On Windows
+source venv/bin/activate   #  Linux/Mac
+venv\Scripts\activate      #  Windows
 ```
 
 ###  Install Dependencies
@@ -197,9 +197,7 @@ The system uses:
 * Patient Management
 * Resource Allocation
 * Analysis Dashboard
-
-*(You can add screenshots later for better GitHub profile impact)*
-
+* 
 ---
 
 ##  Academic Relevance
