@@ -234,7 +234,7 @@ You are free to use, modify, and distribute this project with proper attribution
 ##  Author
 
 **Anmol**
-B.Tech Student | Full Stack & DBMS Enthusiast
+B.Tech Student |
 GitHub: https://github.com/your-username
 
 ---
